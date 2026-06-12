@@ -1,8 +1,17 @@
 import Register from "./Register";
 import Login from "./Login";
 import Dashboard from "./Dashboard";
-
+import SkillTest from "./SkillTest";
+import ResumeUpload from "./ResumeUpload";
 function App() {
+  const token = localStorage.getItem("token");
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    window.location.reload();
+  };
+
+  
   return (
     <div style={{ fontFamily: "Arial" }}>
       <nav
@@ -57,7 +66,19 @@ function App() {
 
       <Register />
       <Login />
-      <Dashboard />
+  {token ? (
+  <>
+    <button onClick={logout}>Logout</button>
+
+    <Dashboard />
+
+    <SkillTest />
+
+    <ResumeUpload />
+  </>
+) : (
+  <p>Please login to view dashboard.</p>
+)}
     </div>
   );
 }

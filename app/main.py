@@ -16,7 +16,7 @@ from sqlalchemy.orm import Session
 
 
 from app.database import Base, engine, SessionLocal
-from app.models import User, Verification
+from app.models import User, Verification, Badge
 from app.schemas import UserCreate, UserLogin, TestSubmission
 Base.metadata.create_all(bind=engine)
 
@@ -322,8 +322,37 @@ def dashboard(db: Session = Depends(get_db)):
             "badge": v.badge
         })
 
-    return {
+        badges = db.query(Badge).all()
+
+        saved_badges = []
+
+        for b in badges:
+         saved_badges.append({
+        "badge_name": b.badge_name
+    })
+
+    return { 
         "full_name": "Tushar Kumar",
         "email": "tushar@gmail.com",
-        "verified_skills": verified_skills
+        "verified_skills": verified_skills,
+        "badges": saved_badges,
+ 
+    }
+
+@app.post("/save-badge")
+def save_badge(
+    email: str,
+    badge_name: str,
+    db: Session = Depends(get_db)
+):
+    badge = Badge(
+        email=email,
+        badge_name=badge_name
+    )
+
+    db.add(badge)
+    db.commit()
+
+    return {
+        "message": "Badge Saved Successfully"
     }

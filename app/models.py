@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Float
 from .database import Base
 
 class User(Base):
@@ -17,3 +17,10 @@ class Verification(Base):
     skill = Column(String)
     score = Column(Integer)
     badge = Column(String)
+
+class Badge(Base):
+    __tablename__ = "badges"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, index=True)
+    badge_name = Column(String)

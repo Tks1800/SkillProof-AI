@@ -1,34 +1,51 @@
 import { useState } from "react";
 
 function Dashboard() {
-  const [profile, setProfile] = useState(null);
+  const [dashboard, setDashboard] = useState(null);
 
-  const loadProfile = async () => {
-    const token = localStorage.getItem("token");
-
-    const response = await fetch("http://127.0.0.1:8000/profile", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  const loadDashboard = async () => {
+    const response = await fetch("http://127.0.0.1:8000/dashboard");
 
     const data = await response.json();
 
-    setProfile(data);
+    setDashboard(data);
   };
 
   return (
     <div style={{ padding: "30px" }}>
       <h2>Dashboard</h2>
 
-      <button onClick={loadProfile}>
-        Load Profile
+      <button onClick={loadDashboard}>
+        Load Dashboard
       </button>
 
-      {profile && (
+      {dashboard && (
         <div style={{ marginTop: "20px" }}>
-          <p><strong>Message:</strong> {profile.message}</p>
-          <p><strong>Email:</strong> {profile.email}</p>
+          <p>
+            <strong>Name:</strong> {dashboard.full_name}
+          </p>
+
+          <p>
+            <strong>Email:</strong> {dashboard.email}
+          </p>
+
+          <h3>Verified Skills</h3>
+
+          {dashboard.verified_skills.map((skill, index) => (
+            <div key={index}>
+              ✔ {skill.skill} – {skill.score}%
+            </div>
+          ))}
+
+          <h3 style={{ marginTop: "20px" }}>
+            Badges Earned
+          </h3>
+
+          {dashboard.badges.map((badge, index) => (
+            <div key={index}>
+              🏅 {badge.badge_name}
+            </div>
+          ))}
         </div>
       )}
     </div>

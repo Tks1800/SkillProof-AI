@@ -17,9 +17,11 @@ function Login() {
     });
 
     const data = await response.json();
+    localStorage.setItem("token", data.access_token);
 
     console.log(data);
-
+    window.location.reload();
+    
     if (data.access_token) {
       localStorage.setItem("token", data.access_token);
 

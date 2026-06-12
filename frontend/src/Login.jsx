@@ -5,23 +5,25 @@ function Login() {
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
-    const response = await fetch("http://127.0.0.1:8000/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    });
-
+  const response = await fetch(
+    "https://skillproof-ai-production.up.railway.app/login",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email: email,
+      password: password,
+    }),
+  }
+);
     const data = await response.json();
     localStorage.setItem("token", data.access_token);
 
     console.log(data);
     window.location.reload();
-    
+
     if (data.access_token) {
       localStorage.setItem("token", data.access_token);
 

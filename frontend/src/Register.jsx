@@ -8,7 +8,7 @@ function Register() {
   const handleRegister = async () => {
   console.log("Register button clicked");
 
-  const response = await fetch("http://127.0.0.1:8000/register", {
+  const response = await fetch("https://skillproof-ai-production.up.railway.app/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

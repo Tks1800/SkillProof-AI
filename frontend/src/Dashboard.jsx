@@ -4,7 +4,7 @@ function Dashboard() {
   const [dashboard, setDashboard] = useState(null);
 
   const loadDashboard = async () => {
-    const response = await fetch("http://127.0.0.1:8000/dashboard");
+    const response = await fetch("https://skillproof-ai-production.up.railway.app/profile");
 
     const data = await response.json();
 

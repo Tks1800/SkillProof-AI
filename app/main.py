@@ -21,11 +21,15 @@ from app.schemas import UserCreate, UserLogin, TestSubmission
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
 from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",              # Local Vite
+        "https://skill-proof-ai-ffy2.vercel.app",   # Your Vercel frontend
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

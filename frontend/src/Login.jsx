@@ -5,53 +5,30 @@ function Login() {
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
-  const response = await fetch(
-    "https://skillproof-ai-production.up.railway.app/login",
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: email,
-      password: password,
-    }),
-  }
-);
-    const handleLogin = async () => {
-  const response = await fetch(
-    "https://skillproof-ai-production.up.railway.app/login",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    }
-  );
+    const response = await fetch(
+      "https://skillproof-ai-production.up.railway.app/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      }
+    );
 
-  const data = await response.json();
+    const data = await response.json();
 
-  console.log(data);
-
-  if (data.access_token) {
-    localStorage.setItem("token", data.access_token);
-
-    alert("Login Successful!");
-
-    window.location.reload();
-  } else {
-    alert(data.message);
-  }
-};
+    console.log(data);
 
     if (data.access_token) {
       localStorage.setItem("token", data.access_token);
 
       alert("Login Successful!");
+
+      window.location.reload();
     } else {
       alert(data.message);
     }

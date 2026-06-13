@@ -18,11 +18,35 @@ function Login() {
     }),
   }
 );
-    const data = await response.json();
+    const handleLogin = async () => {
+  const response = await fetch(
+    "https://skillproof-ai-production.up.railway.app/login",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    }
+  );
+
+  const data = await response.json();
+
+  console.log(data);
+
+  if (data.access_token) {
     localStorage.setItem("token", data.access_token);
 
-    console.log(data);
+    alert("Login Successful!");
+
     window.location.reload();
+  } else {
+    alert(data.message);
+  }
+};
 
     if (data.access_token) {
       localStorage.setItem("token", data.access_token);

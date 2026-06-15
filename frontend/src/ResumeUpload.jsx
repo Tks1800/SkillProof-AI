@@ -24,10 +24,8 @@ function ResumeUpload() {
     );
 
     const data = await response.json();
-
     setMessage(data.message);
 
-    // Extract skills after upload
     const skillResponse = await fetch(
       "https://skillproof-ai-production.up.railway.app/extract-skills",
       {
@@ -37,26 +35,17 @@ function ResumeUpload() {
 
     const skillData = await skillResponse.json();
 
-if (skillData.skills) {
-  setSkills(skillData.skills);
+    if (skillData.skills) {
+      setSkills(skillData.skills);
 
-  const availableTests = ["Python", "SQL", "FastAPI"];
+      const availableTests = ["Python", "SQL", "FastAPI"];
 
-  const matchedTests = skillData.skills.filter((skill) =>
-    availableTests.includes(skill)
-  );
+      const matchedTests = skillData.skills.filter((skill) =>
+        availableTests.includes(skill)
+      );
 
-  setRecommendedTests(matchedTests);
-}
-
-  const availableTests = ["Python", "SQL", "FastAPI"];
-
-  const matchedTests = skillData.skills.filter(skill =>
-    availableTests.includes(skill)
-  );
-
-  setRecommendedTests(matchedTests);
-}
+      setRecommendedTests(matchedTests);
+    }
   };
 
   return (
@@ -95,22 +84,22 @@ if (skillData.skills) {
           </ul>
         </div>
       )}
+
+      {recommendedTests.length > 0 && (
+        <div style={{ marginTop: "20px" }}>
+          <h3>Recommended Tests</h3>
+
+          <ul>
+            {recommendedTests.map((test, index) => (
+              <li key={index}>
+                📝 Take {test} Test
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
-
-
-{recommendedTests.length > 0 && (
-  <div style={{ marginTop: "20px" }}>
-    <h3>Recommended Tests</h3>
-
-    <ul>
-      {recommendedTests.map((test, index) => (
-        <li key={index}>
-          📝 Take {test} Test
-        </li>
-      ))}
-    </ul>
-  </div>
-)}
+}
 
 export default ResumeUpload;

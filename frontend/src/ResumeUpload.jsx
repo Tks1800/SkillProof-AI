@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function ResumeUpload() {
+function ResumeUpload({ setSelectedSkill }) {
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
   const [skills, setSkills] = useState([]);
@@ -61,9 +61,15 @@ function ResumeUpload() {
       <br />
       <br />
 
-      <button onClick={uploadResume}>
-        Upload Resume
-      </button>
+      <button
+        onClick={() => {
+        alert("BUTTON WORKS");
+        console.log("UPLOAD BUTTON CLICKED");
+        uploadResume();
+    }}
+        >
+            Upload Resume
+        </button>
 
       {message && (
         <p style={{ marginTop: "20px" }}>
@@ -91,19 +97,19 @@ function ResumeUpload() {
 
           <ul>
             {recommendedTests.map((test, index) => (
-            <li key={index}>
-            <button
-            onClick={() => alert(`Starting ${test} Test`)}
-            style={{
-            padding: "8px 12px",
-            margin: "5px",
-            cursor: "pointer"
-        }}
-        >
-            📝 Take {test} Test
-        </button>
-        </li>
-    ))}
+              <li key={index}>
+                <button
+                  onClick={() => setSelectedSkill(test)}
+                  style={{
+                    padding: "8px 12px",
+                    margin: "5px",
+                    cursor: "pointer",
+                  }}
+                >
+                  📝 Take {test} Test
+                </button>
+              </li>
+            ))}
           </ul>
         </div>
       )}

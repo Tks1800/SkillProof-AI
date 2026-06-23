@@ -1,17 +1,20 @@
+import { useState } from "react";
 import Register from "./Register";
 import Login from "./Login";
 import Dashboard from "./Dashboard";
 import SkillTest from "./SkillTest";
 import ResumeUpload from "./ResumeUpload";
+
 function App() {
   const token = localStorage.getItem("token");
+
+  const [selectedSkill, setSelectedSkill] = useState(null);
 
   const logout = () => {
     localStorage.removeItem("token");
     window.location.reload();
   };
 
-  
   return (
     <div style={{ fontFamily: "Arial" }}>
       <nav
@@ -25,19 +28,29 @@ function App() {
         <h2>🏆 SkillProof AI</h2>
 
         <div>
-          <button style={{ marginRight: "10px" }}>Login</button>
-          <button>Register</button>
+          <button style={{ marginRight: "10px" }}>
+            Login
+          </button>
+
+          <button>
+            Register
+          </button>
         </div>
       </nav>
 
-      <div style={{ textAlign: "center", padding: "60px" }}>
+      <div
+        style={{
+          textAlign: "center",
+          padding: "60px",
+        }}
+      >
         <h1>Verify Your Skills.</h1>
 
         <h1>Earn Trusted Badges.</h1>
 
         <p>
-          SkillProof AI helps candidates prove their abilities through
-          verification tests.
+          SkillProof AI helps candidates prove their abilities
+          through verification tests.
         </p>
 
         <button
@@ -65,20 +78,26 @@ function App() {
       </div>
 
       <Register />
+
       <Login />
-  {token ? (
-  <>
-    <button onClick={logout}>Logout</button>
 
-    <Dashboard />
+      {token ? (
+        <>
+          <button onClick={logout}>
+            Logout
+          </button>
 
-    <SkillTest />
+          <Dashboard />
 
-    <ResumeUpload />
-  </>
-) : (
-  <p>Please login to view dashboard.</p>
-)}
+          <SkillTest selectedSkill={selectedSkill} />
+
+          <ResumeUpload
+            setSelectedSkill={setSelectedSkill}
+          />
+        </>
+      ) : (
+        <p>Please login to view dashboard.</p>
+      )}
     </div>
   );
 }

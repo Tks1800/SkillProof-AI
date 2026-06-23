@@ -22,6 +22,8 @@ Base.metadata.create_all(bind=engine)
 
 from fastapi.middleware.cors import CORSMiddleware
 
+LAST_UPLOADED_FILE = None
+
 app = FastAPI()
 
 app.add_middleware(
@@ -161,10 +163,14 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
 @app.post("/upload-resume")
 async def upload_resume(file: UploadFile = File(...)):
 
+    global LAST_UPLOADED_FILE
+
     contents = await file.read()
 
     with open(file.filename, "wb") as f:
         f.write(contents)
+
+    LAST_UPLOADED_FILE = file.filename
 
     return {
         "message": "Resume uploaded successfully",
@@ -173,6 +179,11 @@ async def upload_resume(file: UploadFile = File(...)):
 
 @app.post("/extract-skills")
 def extract_skills():
+
+    global LAST_UPLOADED_FILE
+
+    if not LAST_UPLOADED_FILE:
+        return {"error": "No resume uploaded"}
 
     skills = [
         "Python",
@@ -188,13 +199,14 @@ def extract_skills():
     extracted_skills = []
 
     try:
-        with open("resume.pdf", "rb") as file:
+        with open(LAST_UPLOADED_FILE, "rb") as file:
+
             pdf_reader = PyPDF2.PdfReader(file)
 
             text = ""
 
             for page in pdf_reader.pages:
-                text += page.extract_text()
+                text += page.extract_text() or ""
 
         for skill in skills:
             if skill.lower() in text.lower():

@@ -91,10 +91,19 @@ function ResumeUpload() {
 
           <ul>
             {recommendedTests.map((test, index) => (
-              <li key={index}>
-                📝 Take {test} Test
-              </li>
-            ))}
+            <li key={index}>
+            <button
+            onClick={() => alert(`Starting ${test} Test`)}
+            style={{
+            padding: "8px 12px",
+            margin: "5px",
+            cursor: "pointer"
+        }}
+        >
+            📝 Take {test} Test
+        </button>
+        </li>
+    ))}
           </ul>
         </div>
       )}

@@ -1,5 +1,10 @@
 from pydantic import BaseModel
 
+
+class JobCreate(BaseModel):
+    title: str
+    required_skills: str
+
 class UserCreate(BaseModel):
     full_name: str
     email: str

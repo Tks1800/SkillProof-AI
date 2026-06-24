@@ -1,5 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float
 from .database import Base
+from sqlalchemy import Column, Integer, String
+
 
 class User(Base):
     __tablename__ = "users"
@@ -24,3 +26,10 @@ class Badge(Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, index=True)
     badge_name = Column(String)
+
+class Job(Base):
+    __tablename__ = "jobs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String)
+    required_skills = Column(String)

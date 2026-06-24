@@ -16,8 +16,8 @@ from sqlalchemy.orm import Session
 
 
 from app.database import Base, engine, SessionLocal
-from app.models import User, Verification, Badge
-from app.schemas import UserCreate, UserLogin, TestSubmission
+from app.models import User, Verification, Badge, Job
+from app.schemas import UserCreate, UserLogin, TestSubmission, JobCreate
 Base.metadata.create_all(bind=engine)
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -371,4 +371,21 @@ def save_badge(
 
     return {
         "message": "Badge Saved Successfully"
+    }
+
+@app.post("/create-job")
+def create_job(
+    job: JobCreate,
+    db: Session = Depends(get_db)
+):
+    new_job = Job(
+        title=job.title,
+        required_skills=job.required_skills
+    )
+
+    db.add(new_job)
+    db.commit()
+
+    return {
+        "message": "Job Created Successfully"
     }

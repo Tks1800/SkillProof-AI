@@ -4,6 +4,8 @@ import Login from "./Login";
 import Dashboard from "./Dashboard";
 import SkillTest from "./SkillTest";
 import ResumeUpload from "./ResumeUpload";
+import Profile from "./Profile";
+import RecruiterDashboard from "./RecruiterDashboard";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -88,6 +90,10 @@ function App() {
           </button>
 
           <Dashboard />
+
+          <Profile />
+
+          <RecruiterDashboard />
 
           <ResumeUpload
             setSelectedSkill={setSelectedSkill}

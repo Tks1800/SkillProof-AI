@@ -24,6 +24,7 @@ function ResumeUpload({ setSelectedSkill }) {
     );
 
     const data = await response.json();
+
     setMessage(data.message);
 
     const skillResponse = await fetch(
@@ -38,11 +39,16 @@ function ResumeUpload({ setSelectedSkill }) {
     if (skillData.skills) {
       setSkills(skillData.skills);
 
-      const availableTests = ["Python", "SQL", "FastAPI"];
+      const availableTests = [
+        "Python",
+        "SQL",
+        "FastAPI",
+      ];
 
-      const matchedTests = skillData.skills.filter((skill) =>
-        availableTests.includes(skill)
-      );
+      const matchedTests =
+        skillData.skills.filter((skill) =>
+          availableTests.includes(skill)
+        );
 
       setRecommendedTests(matchedTests);
     }
@@ -61,15 +67,9 @@ function ResumeUpload({ setSelectedSkill }) {
       <br />
       <br />
 
-      <button
-        onClick={() => {
-        alert("BUTTON WORKS");
-        console.log("UPLOAD BUTTON CLICKED");
-        uploadResume();
-    }}
-        >
-            Upload Resume
-        </button>
+      <button onClick={uploadResume}>
+        Upload Resume
+      </button>
 
       {message && (
         <p style={{ marginTop: "20px" }}>
@@ -99,7 +99,14 @@ function ResumeUpload({ setSelectedSkill }) {
             {recommendedTests.map((test, index) => (
               <li key={index}>
                 <button
-                  onClick={() => setSelectedSkill(test)}
+                  onClick={() => {
+                    alert(`Selected: ${test}`);
+                    console.log(
+                      "SETTING SKILL:",
+                      test
+                    );
+                    setSelectedSkill(test);
+                  }}
                   style={{
                     padding: "8px 12px",
                     margin: "5px",

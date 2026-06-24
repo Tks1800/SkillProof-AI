@@ -389,3 +389,55 @@ def create_job(
     return {
         "message": "Job Created Successfully"
     }
+
+@app.get("/jobs")
+def get_jobs(db: Session = Depends(get_db)):
+
+    jobs = db.query(Job).all()
+
+    job_list = []
+
+    for job in jobs:
+        job_list.append({
+            "id": job.id,
+            "title": job.title,
+            "required_skills": job.required_skills
+        })
+
+    return job_list
+
+@app.get("/matched-candidates/{job_id}")
+def matched_candidates(
+    job_id: int,
+    db: Session = Depends(get_db)
+):
+    job = db.query(Job).filter(Job.id == job_id).first()
+
+    if not job:
+        return {"message": "Job not found"}
+
+    required_skills = [
+        skill.strip().lower()
+        for skill in job.required_skills.split(",")
+    ]
+
+    verifications = db.query(Verification).all()
+
+    candidates = []
+
+    for v in verifications:
+
+        score = 0
+
+        if v.skill.lower() in required_skills:
+            score += 1
+
+        if score > 0:
+            candidates.append({
+                "email": v.email,
+                "skill": v.skill,
+                "badge": v.badge,
+                "match_score": score
+            })
+
+    return candidates

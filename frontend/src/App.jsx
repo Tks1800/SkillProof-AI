@@ -89,10 +89,12 @@ function App() {
 
           <Dashboard />
 
-          <SkillTest selectedSkill={selectedSkill} />
-
           <ResumeUpload
             setSelectedSkill={setSelectedSkill}
+          />
+
+          <SkillTest
+            selectedSkill={selectedSkill}
           />
         </>
       ) : (

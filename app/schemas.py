@@ -17,3 +17,8 @@ class UserLogin(BaseModel):
 class TestSubmission(BaseModel):
     skill: str
     answers: list[str]
+
+class InterviewCreate(BaseModel):
+    recruiter_email: str
+    candidate_email: str
+    job_title: str

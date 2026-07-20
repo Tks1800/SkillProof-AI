@@ -1,7 +1,16 @@
+from app.routers import auth
+from app.routers import candidate
+from app.routers import recruiter
+from app.routers import resume
+from app.routers import interview
+from app.routers import dashboard
 from jose import jwt
 from jose import JWTError
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from datetime import datetime, timedelta
+from app.auth import hash_password, verify_password
+from app.routers import resume
+from app.routers import jobs
 
 SECRET_KEY = "skillproof_super_secret_key"
 ALGORITHM = "HS256"
@@ -16,12 +25,18 @@ from sqlalchemy.orm import Session
 
 
 from app.database import Base, engine, SessionLocal
-from app.models import (
+from app.models_new import (
     User,
-    Verification,
-    Badge,
+    Resume,
     Job,
+    Company,
+    CandidateProfile,
+    CandidateSkill,
+    Skill,
+    Question,
+    TestResult,
     InterviewInvitation,
+    Application,
 )
 from app.schemas import (
     UserCreate,
@@ -36,18 +51,27 @@ from fastapi.middleware.cors import CORSMiddleware
 
 LAST_UPLOADED_FILE = None
 
-app = FastAPI()
+app = FastAPI(debug=True)
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://skill-proof-ai-ffy2.vercel.app",
         "http://localhost:5173",
+        "http://localhost:5176",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(auth.router)
+app.include_router(candidate.router)
+app.include_router(recruiter.router)
+app.include_router(resume.router)
+app.include_router(interview.router)
+app.include_router(dashboard.router)
+app.include_router(jobs.router)
 
 TEST_QUESTIONS = {
     "Python": [
@@ -134,410 +158,4 @@ def home():
     return {"message": "SkillProof AI Running"}
 
 
-@app.post("/register")
-def register(user: UserCreate, db: Session = Depends(get_db)):
-    new_user = User(
-        full_name=user.full_name,
-        email=user.email,
-        password=user.password
-    )
-
-    existing_user = db.query(User).filter(User.email == user.email).first()
-
-    if existing_user:
-        return {"message": "Email already registered"}
-
-    db.add(new_user)
-    db.commit()
-
-    return {"message": "User Registered Successfully"}
-
-@app.post("/login")
-def login(user: UserLogin, db: Session = Depends(get_db)):
-
-    existing_user = db.query(User).filter(User.email == user.email).first()
-
-    if not existing_user:
-        return {"message": "User not found"}
-
-    if existing_user.password != user.password:
-        return {"message": "Invalid password"}
-
-    token = create_access_token(
-    data={"sub": existing_user.email}
-)
-
-    return {
-    "access_token": token,
-    "token_type": "bearer"
-}
-
-@app.post("/upload-resume")
-async def upload_resume(file: UploadFile = File(...)):
-
-    global LAST_UPLOADED_FILE
-
-    contents = await file.read()
-
-    with open(file.filename, "wb") as f:
-        f.write(contents)
-
-    LAST_UPLOADED_FILE = file.filename
-
-    return {
-        "message": "Resume uploaded successfully",
-        "filename": file.filename
-    }
-
-@app.post("/extract-skills")
-def extract_skills():
-
-    global LAST_UPLOADED_FILE
-
-    if not LAST_UPLOADED_FILE:
-        return {"error": "No resume uploaded"}
-
-    skills = [
-        "Python",
-        "SQL",
-        "FastAPI",
-        "Machine Learning",
-        "React",
-        "Git",
-        "Java",
-        "C++"
-    ]
-
-    extracted_skills = []
-
-    try:
-        with open(LAST_UPLOADED_FILE, "rb") as file:
-
-            pdf_reader = PyPDF2.PdfReader(file)
-
-            text = ""
-
-            for page in pdf_reader.pages:
-                text += page.extract_text() or ""
-
-        for skill in skills:
-            if skill.lower() in text.lower():
-                extracted_skills.append(skill)
-
-        return {
-            "skills": extracted_skills
-        }
-
-    except Exception as e:
-        return {
-            "error": str(e)
-        }
     
-
-@app.get("/profile")
-def profile(current_user: str = Depends(verify_token)):
-
-    return {
-        "message": "Welcome to SkillProof AI",
-        "email": current_user
-    }
-
-@app.get("/test/{skill}")
-def get_test(skill: str):
-
-   skill = skill.capitalize()
-
-   if skill not in TEST_QUESTIONS:
-        return {
-        "message": "No test available for this skill"
-    }
-
-   questions = []
-
-   for q in TEST_QUESTIONS[skill]:
-        questions.append({
-            "question": q["question"],
-            "options": q["options"]
-        })
-
-        return {
-        "skill": skill,
-        "questions": questions
-    }
-   
-
-@app.post("/submit-test")
-def submit_test(test: TestSubmission, db: Session = Depends(get_db)):
-
-    skill = test.skill.capitalize()
-
-    if skill not in TEST_QUESTIONS:
-        return {
-            "message": "No test found for this skill"
-        }
-
-    questions = TEST_QUESTIONS[skill]
-
-    score = 0
-
-    for i in range(len(questions)):
-
-        if i < len(test.answers):
-
-            if test.answers[i] == questions[i]["answer"]:
-                score += 1
-
-    total = len(questions)
-
-    percentage = (score / total) * 100
-
-    passed = percentage >= 70
-
-    badge = None
-
-    if passed:
-        badge = f"{skill} Verified"
-
-    verification = Verification(
-        email="tushar@gmail.com",
-        skill=skill,
-        score=percentage,
-        badge=badge
-    )
-
-    db.add(verification)
-    db.commit()
-
-    global VERIFIED_RESULTS
-
-    VERIFIED_RESULTS = {
-    "full_name": "Tushar Kumar",
-    "email": "tushar@gmail.com",
-    "verified_skills": [
-        {
-            "skill": skill,
-            "score": percentage,
-            "badge": badge
-        }
-    ]
-}
-
-    return {
-        "skill": skill,
-        "score": score,
-        "total_questions": total,
-        "percentage": percentage,
-        "passed": passed,
-        "badge": badge
-    }
-
-@app.get("/dashboard")
-def dashboard(db: Session = Depends(get_db)):
-
-    verifications = db.query(Verification).all()
-
-    if not verifications:
-        return {
-            "message": "No verified skills yet"
-        }
-
-    verified_skills = []
-
-    for v in verifications:
-        verified_skills.append({
-            "skill": v.skill,
-            "score": v.score,
-            "badge": v.badge
-        })
-
-        badges = db.query(Badge).all()
-
-        saved_badges = []
-
-        for b in badges:
-         saved_badges.append({
-        "badge_name": b.badge_name
-    })
-
-    return { 
-        "full_name": "Tushar Kumar",
-        "email": "tushar@gmail.com",
-        "verified_skills": verified_skills,
-        "badges": saved_badges,
- 
-    }
-
-@app.post("/save-badge")
-def save_badge(
-    email: str,
-    badge_name: str,
-    db: Session = Depends(get_db)
-):
-    badge = Badge(
-        email=email,
-        badge_name=badge_name
-    )
-
-    db.add(badge)
-    db.commit()
-
-    return {
-        "message": "Badge Saved Successfully"
-    }
-
-@app.post("/create-job")
-def create_job(
-    job: JobCreate,
-    db: Session = Depends(get_db)
-):
-    new_job = Job(
-        title=job.title,
-        required_skills=job.required_skills
-    )
-
-    db.add(new_job)
-    db.commit()
-
-    return {
-        "message": "Job Created Successfully"
-    }
-
-@app.get("/jobs")
-def get_jobs(db: Session = Depends(get_db)):
-
-    jobs = db.query(Job).all()
-
-    job_list = []
-
-    for job in jobs:
-        job_list.append({
-            "id": job.id,
-            "title": job.title,
-            "required_skills": job.required_skills
-        })
-
-    return job_list
-
-@app.get("/matched-candidates/{job_id}")
-def matched_candidates(
-    job_id: int,
-    db: Session = Depends(get_db)
-):
-    job = db.query(Job).filter(Job.id == job_id).first()
-
-    if not job:
-        return {"message": "Job not found"}
-
-    required_skills = [
-        skill.strip().lower()
-        for skill in job.required_skills.split(",")
-    ]
-
-    verifications = db.query(Verification).all()
-
-    candidates = []
-
-    for v in verifications:
-
-        score = 0
-
-        if v.skill.lower() in required_skills:
-            score += 1
-
-        if score > 0:
-            candidates.append({
-                "email": v.email,
-                "skill": v.skill,
-                "badge": v.badge,
-                "match_score": score
-            })
-
-    return candidates
-
-@app.post("/invite-interview")
-def invite_interview(
-    interview: InterviewCreate,
-    db: Session = Depends(get_db)
-):
-    new_invitation = InterviewInvitation(
-        recruiter_email=interview.recruiter_email,
-        candidate_email=interview.candidate_email,
-        job_title=interview.job_title,
-        status="Pending"
-    )
-
-    db.add(new_invitation)
-    db.commit()
-
-    return {
-        "message": "Interview Invitation Sent Successfully"
-    }
-
-@app.get("/candidate-interviews/{email}")
-def candidate_interviews(
-    email: str,
-    db: Session = Depends(get_db)
-):
-    interviews = db.query(
-        InterviewInvitation
-    ).filter(
-        InterviewInvitation.candidate_email == email
-    ).all()
-
-    return [
-        {
-            "id": interview.id,
-            "recruiter_email": interview.recruiter_email,
-            "job_title": interview.job_title,
-            "status": interview.status
-        }
-        for interview in interviews
-    ]
-
-@app.post("/accept-interview/{interview_id}")
-def accept_interview(
-    interview_id: int,
-    db: Session = Depends(get_db)
-):
-    interview = db.query(
-        InterviewInvitation
-    ).filter(
-        InterviewInvitation.id == interview_id
-    ).first()
-
-    if not interview:
-        return {
-            "message": "Interview not found"
-        }
-
-    interview.status = "Accepted"
-
-    db.commit()
-
-    return {
-        "message": "Interview Accepted"
-    }
-
-@app.post("/reject-interview/{interview_id}")
-def reject_interview(
-    interview_id: int,
-    db: Session = Depends(get_db)
-):
-    interview = db.query(
-        InterviewInvitation
-    ).filter(
-        InterviewInvitation.id == interview_id
-    ).first()
-
-    if not interview:
-        return {
-            "message": "Interview not found"
-        }
-
-    interview.status = "Rejected"
-
-    db.commit()
-
-    return {
-        "message": "Interview Rejected"
-    }

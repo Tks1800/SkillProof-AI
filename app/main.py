@@ -33,8 +33,14 @@ from app.routers import (
 )
 
 from dotenv import load_dotenv
+from pathlib import Path
 
-load_dotenv()
+BASE_DIR = Path(__file__).resolve().parent.parent
+ENV_FILE = BASE_DIR / ".env"
+
+print("Loading:", ENV_FILE)
+
+load_dotenv(dotenv_path=ENV_FILE)
 
 import os
 
@@ -49,17 +55,32 @@ app = FastAPI(debug=True)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://skill-proof-ai-ffy2.vercel.app",
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:5174",
-        "http://127.0.0.1:5174",
-        "http://localhost:5175",
-        "http://127.0.0.1:5175",
-        "http://localhost:5176",
-        "http://127.0.0.1:5176",
-    ],
+    origins = [
+    # Production
+    "https://vaivoai.com",
+    "https://www.vaivoai.com",
+
+    # Vercel
+    "https://skill-proof-ai-ffy2.vercel.app",
+
+    # Local
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:5174",
+    "http://localhost:5175",
+    "http://127.0.0.1:5175",
+    "http://localhost:5176",
+    "http://127.0.0.1:5176",
+]
+
+    app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

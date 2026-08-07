@@ -1,12 +1,16 @@
 import axios from "axios";
 
+// ======================================
+// API Configuration
+// ======================================
+
 const API = axios.create({
-  baseURL: "https://skillproof-ai-production.up.railway.app",
+  baseURL: "https://api.vaivoai.com",
 });
 
-// ===========================
-// Attach JWT Token
-// ===========================
+// ======================================
+// JWT Authentication
+// ======================================
 
 API.interceptors.request.use(
   (config) => {
@@ -23,9 +27,9 @@ API.interceptors.request.use(
 
 export default API;
 
-// ===========================
+// ======================================
 // Authentication
-// ===========================
+// ======================================
 
 export const loginUser = (data) =>
   API.post("/auth/login", data);
@@ -36,9 +40,9 @@ export const registerUser = (data) =>
 export const getProfile = () =>
   API.get("/auth/profile");
 
-// ===========================
+// ======================================
 // Recruiter Jobs
-// ===========================
+// ======================================
 
 export const createJob = (data) =>
   API.post("/jobs/", data);
@@ -55,9 +59,9 @@ export const updateJob = (id, data) =>
 export const deleteJob = (id) =>
   API.delete(`/jobs/${id}`);
 
-// ===========================
+// ======================================
 // Candidate Jobs
-// ===========================
+// ======================================
 
 export const getAvailableJobs = () =>
   API.get("/jobs");
@@ -65,9 +69,9 @@ export const getAvailableJobs = () =>
 export const applyJob = (jobId) =>
   API.post(`/applications/apply/${jobId}`);
 
-// ===========================
+// ======================================
 // Resume
-// ===========================
+// ======================================
 
 export const uploadResume = (formData) =>
   API.post("/upload-resume", formData, {
@@ -76,18 +80,30 @@ export const uploadResume = (formData) =>
     },
   });
 
-// ===========================
+export const viewResume = (resumeId) =>
+  API.get(`/resume/view/${resumeId}`, {
+    responseType: "blob",
+  });
+
+// ======================================
 // Skill Test
-// ===========================
+// ======================================
 
 export const getSkillTest = (skill) =>
   API.get(`/test/${skill}`);
 
+export const getDetectedSkills = () =>
+  API.get("/skill-test/skills");
 
+export const getSkillQuestions = (skill) =>
+  API.get(`/skill-test/${skill}`);
 
-// ===========================
+export const submitSkillTest = (data) =>
+  API.post("/skill-test/submit", data);
+
+// ======================================
 // Recruiter Applications
-// ===========================
+// ======================================
 
 export const getRecruiterApplications = () =>
   API.get("/applications/recruiter");
@@ -101,9 +117,9 @@ export const rejectApplication = (id) =>
 export const getJobApplicants = (jobId) =>
   API.get(`/recruiter-dashboard/applicants/${jobId}`);
 
-// ===========================
+// ======================================
 // Interviews
-// ===========================
+// ======================================
 
 export const sendInterview = (data) =>
   API.post("/interviews/send", data);
@@ -120,9 +136,9 @@ export const acceptInterview = (id) =>
 export const rejectInterview = (id) =>
   API.put(`/interviews/${id}/reject`);
 
-// ===========================
+// ======================================
 // Dashboard
-// ===========================
+// ======================================
 
 export const getRecruiterDashboard = () =>
   API.get("/dashboard/recruiter");
@@ -130,9 +146,12 @@ export const getRecruiterDashboard = () =>
 export const getCandidateDashboard = () =>
   API.get("/dashboard/stats");
 
-// ===========================
+export const getRecruiterStats = () =>
+  API.get("/recruiter-dashboard/stats");
+
+// ======================================
 // AI Matching
-// ===========================
+// ======================================
 
 export const getMatchedCandidates = (jobId) =>
   API.get(`/matched-candidates/${jobId}`);
@@ -140,23 +159,14 @@ export const getMatchedCandidates = (jobId) =>
 export const getAiMatch = (jobId, email) =>
   API.get(`/ai-match/${jobId}/${encodeURIComponent(email)}`);
 
-export const getDetectedSkills = () =>
-  API.get("/skill-test/skills");
-
-export const getSkillQuestions = (skill) =>
-  API.get(`/skill-test/${skill}`);
-
-export const submitSkillTest = (data) =>
-  API.post("/skill-test/submit", data);
-
-export const getRecruiterStats = () =>
-  API.get("/recruiter-dashboard/stats");
-
 export const getCandidateAnalysis = (email, jobId) =>
   API.get(
     `/candidate-profile/${email}/analysis?jobId=${jobId}`
   );
 
+// ======================================
+// Notifications
+// ======================================
 
 export const getNotifications = () =>
   API.get("/notifications");
@@ -166,8 +176,3 @@ export const markNotificationRead = (id) =>
 
 export const markAllNotificationsRead = () =>
   API.put("/notifications/read-all");
-
-export const viewResume = (resumeId) =>
-  API.get(`/resume/view/${resumeId}`, {
-    responseType: "blob",
-  });

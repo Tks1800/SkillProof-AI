@@ -12,92 +12,137 @@ const features = [
     icon: Brain,
     title: "AI Expertise",
     description:
-      "We build intelligent AI systems powered by Machine Learning, LLMs, Computer Vision and Automation.",
+      "Build intelligent AI products powered by LLMs, Machine Learning, Automation, and modern cloud architecture.",
   },
   {
     icon: ShieldCheck,
     title: "Enterprise Security",
     description:
-      "Industry-standard security practices with scalable cloud infrastructure for startups and enterprises.",
+      "Production-grade security, encrypted data, scalable infrastructure, and enterprise-ready deployment.",
   },
   {
     icon: Rocket,
-    title: "Fast Delivery",
+    title: "Rapid Development",
     description:
-      "Agile development process allowing rapid delivery without compromising quality.",
+      "Launch MVPs in weeks using agile development, modern technologies, and AI-assisted engineering.",
   },
   {
     icon: Clock3,
-    title: "24/7 Support",
+    title: "24/7 Reliability",
     description:
-      "Continuous monitoring and technical support to keep your systems running smoothly.",
+      "Reliable monitoring, automated deployments, backups, and continuous support around the clock.",
   },
   {
     icon: TrendingUp,
     title: "Business Growth",
     description:
-      "Technology solutions designed to increase revenue, reduce costs and improve efficiency.",
+      "Technology that improves hiring accuracy, reduces costs, and accelerates business growth.",
   },
   {
     icon: Headset,
-    title: "Dedicated Team",
+    title: "Dedicated Experts",
     description:
-      "Experienced engineers, designers and AI specialists working as an extension of your company.",
+      "Work with experienced AI engineers, product designers, and software architects focused on your success.",
   },
 ];
 
 export default function WhyChooseUs() {
   return (
-    <section className="bg-[#030712] py-28 text-white">
-      <div className="mx-auto max-w-7xl px-6">
+    <section className="relative overflow-hidden bg-[#030712] py-20 sm:py-24 lg:py-32 text-white">
 
-        <div className="text-center">
-          <p className="text-cyan-400 font-semibold tracking-[6px] uppercase">
-            Why Choose Us
-          </p>
+      {/* Background Glow */}
 
-          <h2 className="mt-5 text-5xl font-bold">
-            Building The Future With AI
+      <div className="absolute inset-0 pointer-events-none">
+
+        <div className="absolute -top-32 -left-20 h-80 w-80 rounded-full bg-cyan-500/10 blur-3xl" />
+
+        <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-purple-600/10 blur-3xl" />
+
+      </div>
+
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+
+        {/* Heading */}
+
+        <div className="max-w-3xl mx-auto text-center">
+
+          <span className="inline-block rounded-full border border-cyan-500/30 bg-cyan-500/10 px-5 py-2 text-xs sm:text-sm uppercase tracking-[3px] text-cyan-400 font-semibold">
+
+            Why Choose VAIVOAI
+
+          </span>
+
+          <h2 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight">
+
+            Building The Future
+
+            <span className="block bg-gradient-to-r from-purple-500 to-cyan-400 bg-clip-text text-transparent">
+
+              With Artificial Intelligence
+
+            </span>
+
           </h2>
 
-          <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-gray-400">
-            We combine Artificial Intelligence, Cloud Computing, Modern Web
-            Technologies and Automation to build digital products that help
-            businesses scale faster.
+          <p className="mt-6 text-base sm:text-lg lg:text-xl leading-8 text-gray-400">
+
+            We combine Artificial Intelligence, Cloud Computing,
+            Data Engineering, Automation, and Modern Web Technologies
+            to build scalable digital products for startups and enterprises.
+
           </p>
+
         </div>
 
-        <div className="mt-20 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {/* Cards */}
+
+        <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 
           {features.map((item, index) => {
+
             const Icon = item.icon;
 
             return (
+
               <div
                 key={index}
-                className="group rounded-3xl border border-white/10 bg-white/[0.03] p-8 transition duration-300 hover:-translate-y-2 hover:border-cyan-400/40 hover:bg-white/[0.05]"
+                className="group rounded-3xl border border-white/10 bg-white/[0.03] p-7 sm:p-8 backdrop-blur-xl transition-all duration-300 hover:-translate-y-3 hover:border-cyan-400/40 hover:bg-white/[0.05] hover:shadow-[0_20px_50px_rgba(6,182,212,0.18)]"
               >
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-400 transition group-hover:bg-cyan-500 group-hover:text-white">
-                  <Icon size={32} />
+
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-400 transition-all duration-300 group-hover:scale-110 group-hover:bg-cyan-500 group-hover:text-white">
+
+                  <Icon size={30} />
+
                 </div>
 
-                <h3 className="mt-8 text-2xl font-bold">
+                <h3 className="mt-7 text-xl sm:text-2xl font-bold">
+
                   {item.title}
+
                 </h3>
 
-                <p className="mt-5 leading-8 text-gray-400">
+                <p className="mt-4 text-gray-400 leading-7">
+
                   {item.description}
+
                 </p>
 
-                <button className="mt-8 font-semibold text-cyan-400 transition hover:text-cyan-300">
+                <button className="mt-6 text-cyan-400 font-semibold hover:text-cyan-300 transition">
+
                   Learn More →
+
                 </button>
+
               </div>
+
             );
+
           })}
 
         </div>
+
       </div>
+
     </section>
   );
 }

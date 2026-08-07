@@ -3,113 +3,122 @@ import { ArrowRight, PlayCircle } from "lucide-react";
 function Hero() {
   return (
     <section className="relative overflow-hidden bg-[#070B1A]">
+      {/* Background Glow */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -left-32 h-96 w-96 rounded-full bg-cyan-500/10 blur-3xl" />
+        <div className="absolute -bottom-40 -right-32 h-96 w-96 rounded-full bg-purple-600/10 blur-3xl" />
+      </div>
 
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center px-8 py-24">
+      <div className="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-16 sm:py-24">
 
-        {/* Left */}
+        <div className="grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
 
-        <div>
+          {/* LEFT */}
+          <div className="text-center lg:text-left">
 
-          <span className="text-cyan-400 uppercase tracking-[4px] font-semibold">
-            VAIVOAI Technologies Pvt. Ltd.
-          </span>
-
-          <h1 className="text-6xl lg:text-7xl font-extrabold leading-tight text-white mt-6">
-
-            Trust Skills.
-
-            <br />
-
-            <span className="bg-gradient-to-r from-purple-500 to-cyan-400 bg-clip-text text-transparent">
-              Hire Smarter.
+            <span className="inline-block text-cyan-400 uppercase tracking-[3px] text-xs sm:text-sm font-semibold">
+              VAIVOAI Technologies Pvt. Ltd.
             </span>
 
-          </h1>
+            <h1 className="mt-6 font-extrabold leading-tight text-white">
 
-          <p className="text-gray-400 text-xl mt-8 leading-9 max-w-xl">
+              <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
+                Trust Skills.
+              </span>
 
-            AI-powered hiring platform that verifies real-world skills,
-            analyzes resumes, and helps companies hire with confidence.
+              <span className="block bg-gradient-to-r from-purple-500 to-cyan-400 bg-clip-text text-transparent text-4xl sm:text-5xl md:text-6xl lg:text-7xl mt-2">
+                Hire Smarter.
+              </span>
 
-          </p>
+            </h1>
 
-          <div className="flex gap-5 mt-10">
+            <p className="mt-8 text-gray-400 text-base sm:text-lg lg:text-xl leading-8 max-w-xl mx-auto lg:mx-0">
+              AI-powered hiring platform that verifies real-world skills,
+              analyzes resumes, and helps companies hire with confidence.
+            </p>
 
-            <button className="bg-gradient-to-r from-purple-600 to-cyan-500 px-8 py-4 rounded-2xl flex items-center gap-2 text-lg hover:scale-105 transition">
+            {/* Buttons */}
 
-              Get Started
+            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
 
-              <ArrowRight size={20} />
+              <button className="bg-gradient-to-r from-purple-600 to-cyan-500 px-7 py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 hover:scale-105 transition duration-300 shadow-lg">
 
-            </button>
+                Get Started
 
-            <button className="border border-white/20 px-8 py-4 rounded-2xl flex items-center gap-2 hover:bg-white/5 transition">
+                <ArrowRight size={20} />
 
-              <PlayCircle />
+              </button>
 
-              Book Demo
+              <button className="border border-white/20 px-7 py-4 rounded-2xl flex items-center justify-center gap-2 hover:bg-white/5 transition duration-300">
 
-            </button>
+                <PlayCircle size={20} />
 
-          </div>
+                Book Demo
 
-        </div>
-
-        {/* Right */}
-
-        <div>
-
-          <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-8 shadow-2xl">
-
-            <div className="flex justify-between">
-
-              <div>
-
-                <p className="text-gray-400">
-                  Trust Score™
-                </p>
-
-                <h2 className="text-6xl font-bold text-cyan-400">
-                  94
-                </h2>
-
-              </div>
-
-              <div className="text-right">
-
-                <p className="text-green-400">
-                  Verified
-                </p>
-
-                <p className="text-gray-400">
-                  Candidate
-                </p>
-
-              </div>
+              </button>
 
             </div>
 
-            <div className="space-y-4 mt-10">
+          </div>
 
-              {[
-                "Resume Verified",
-                "Python",
-                "React",
-                "SQL",
-                "AI Interview",
-              ].map((item) => (
-                <div
-                  key={item}
-                  className="flex justify-between bg-white/5 rounded-xl p-4"
-                >
-                  <span>{item}</span>
+          {/* RIGHT */}
 
-                  <span className="text-green-400">
-                    ✓
-                  </span>
+          <div className="flex justify-center">
+
+            <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
+
+              <div className="flex items-start justify-between">
+
+                <div>
+
+                  <p className="text-gray-400 text-sm">
+                    Trust Score™
+                  </p>
+
+                  <h2 className="text-5xl sm:text-6xl font-bold text-cyan-400">
+                    94
+                  </h2>
 
                 </div>
-              ))}
+
+                <div className="text-right">
+
+                  <p className="text-green-400 font-semibold">
+                    Verified
+                  </p>
+
+                  <p className="text-gray-400 text-sm">
+                    Candidate
+                  </p>
+
+                </div>
+
+              </div>
+
+              <div className="mt-8 space-y-3">
+
+                {[
+                  "Resume Verified",
+                  "Python",
+                  "React",
+                  "SQL",
+                  "AI Interview",
+                ].map((item) => (
+                  <div
+                    key={item}
+                    className="flex items-center justify-between rounded-xl bg-white/5 p-4 border border-white/5"
+                  >
+                    <span className="text-sm sm:text-base">
+                      {item}
+                    </span>
+
+                    <span className="text-green-400 font-bold">
+                      ✓
+                    </span>
+                  </div>
+                ))}
+
+              </div>
 
             </div>
 

@@ -11,26 +11,52 @@ export default function DashboardLayout({ children }) {
     const user = JSON.parse(localStorage.getItem("user"));
 
     if (user?.role) {
-      setRole(user.role);
+      setRole(user.role.toLowerCase());
     }
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-[#070B1A] text-white">
+    <div className="min-h-screen bg-[#050816] text-white">
 
-      {role === "recruiter" ? (
-        <RecruiterSidebar />
-      ) : (
-        <CandidateSidebar />
-      )}
+      <div className="flex">
 
-      <div className="flex-1 flex flex-col">
+        {/* Sidebar */}
 
-        <Navbar />
+        <aside className="hidden lg:block w-72 border-r border-white/10 bg-[#0B1120]">
 
-        <main className="flex-1 p-8 overflow-y-auto">
-          {children}
-        </main>
+          {role === "recruiter" ? (
+            <RecruiterSidebar />
+          ) : (
+            <CandidateSidebar />
+          )}
+
+        </aside>
+
+        {/* Main */}
+
+        <div className="flex flex-1 flex-col">
+
+          {/* Sticky Navbar */}
+
+          <header className="sticky top-0 z-40 border-b border-white/10 bg-[#050816]/80 backdrop-blur-xl">
+
+            <Navbar />
+
+          </header>
+
+          {/* Page */}
+
+          <main className="flex-1 overflow-y-auto">
+
+            <div className="mx-auto max-w-7xl px-6 py-8">
+
+              {children}
+
+            </div>
+
+          </main>
+
+        </div>
 
       </div>
 

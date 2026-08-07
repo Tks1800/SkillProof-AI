@@ -84,32 +84,36 @@ export default function CandidateDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
 
           <StatsCard
-            title="Trust Score"
-            value={`${dashboard.trust_score}%`}
-            subtitle="AI Verified"
-            icon={<ShieldCheck size={24} />}
-          />
+          title="Trust Score"
+          value={`${dashboard.trust_score}%`}
+          subtitle="AI Verified"
+          icon={<ShieldCheck size={28} />}
+          color="cyan"
+      />
 
           <StatsCard
-            title="Verified Skills"
-            value={dashboard.verified_skills}
-            subtitle="Skills Confirmed"
-            icon={<Award size={24} />}
-          />
+          title="Verified Skills"
+          value={dashboard.verified_skills}
+          subtitle="Skills Confirmed"
+          icon={<Award size={28} />}
+          color="purple"
+      />
 
           <StatsCard
-            title="Applications"
-            value={dashboard.applications}
-            subtitle="Jobs Applied"
-            icon={<Briefcase size={24} />}
-          />
+          title="Applications"
+          value={dashboard.applications}
+          subtitle="Jobs Applied"
+          icon={<Briefcase size={28} />}
+          color="green"
+      />
 
           <StatsCard
-            title="Interviews"
-            value={dashboard.interviews}
-            subtitle="Upcoming"
-            icon={<CalendarDays size={24} />}
-          />
+          title="Interviews"
+          value={dashboard.interviews}
+          subtitle="Upcoming"
+          icon={<CalendarDays size={28} />}
+          color="orange"
+      />
 
         </div>
 

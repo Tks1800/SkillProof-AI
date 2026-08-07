@@ -1,29 +1,74 @@
-import { Search, UserCircle } from "lucide-react";
+import {
+  Search,
+  UserCircle,
+  Sparkles,
+} from "lucide-react";
+
 import { useAuth } from "../../contexts/AuthContext";
 import NotificationDropdown from "../NotificationDropdown";
 
 export default function Navbar() {
   const { user } = useAuth();
 
+  const hour = new Date().getHours();
+
+  const greeting =
+    hour < 12
+      ? "Good Morning"
+      : hour < 17
+      ? "Good Afternoon"
+      : "Good Evening";
+
   return (
-    <header className="h-20 bg-[#111827] border-b border-gray-800 flex items-center justify-between px-8">
+    <header className="flex h-24 items-center justify-between border-b border-white/10 bg-[#050816]/80 px-8 backdrop-blur-xl">
 
       {/* Left */}
-      <div>
-        <h2 className="text-2xl font-bold">
-          Dashboard
-        </h2>
 
-        <p className="text-gray-400 text-sm">
-          Welcome back 👋
+      <div>
+
+        <div className="flex items-center gap-2">
+
+          <Sparkles
+            size={22}
+            className="text-cyan-400"
+          />
+
+          <span className="text-cyan-400 font-semibold uppercase tracking-[3px]">
+
+            SkillProof AI
+
+          </span>
+
+        </div>
+
+        <h1 className="mt-2 text-3xl font-bold text-white">
+
+          {greeting},
+
+          <span className="text-cyan-400">
+
+            {" "}
+            {user?.full_name?.split(" ")[0] || "User"}
+
+          </span>
+
+        </h1>
+
+        <p className="mt-1 text-gray-400">
+
+          Let's continue building your career today.
+
         </p>
+
       </div>
 
       {/* Right */}
-      <div className="flex items-center gap-6">
+
+      <div className="flex items-center gap-5">
 
         {/* Search */}
-        <div className="hidden md:flex items-center bg-[#1F2937] rounded-xl px-4 py-2">
+
+        <div className="hidden lg:flex items-center rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
 
           <Search
             size={18}
@@ -32,35 +77,37 @@ export default function Navbar() {
 
           <input
             type="text"
-            placeholder="Search..."
-            className="bg-transparent outline-none ml-3 text-sm text-white placeholder-gray-500"
+            placeholder="Search jobs, skills..."
+            className="ml-3 w-64 bg-transparent text-white outline-none placeholder:text-gray-500"
           />
 
         </div>
 
         {/* Notifications */}
+
         <NotificationDropdown />
 
-        {/* User */}
-        <div className="flex items-center gap-3">
+        {/* Profile */}
+
+        <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-2">
 
           <UserCircle
-            size={40}
+            size={44}
             className="text-cyan-400"
           />
 
           <div className="hidden md:block">
 
             <p className="font-semibold">
+
               {user?.full_name || "Guest"}
+
             </p>
 
             <p className="text-sm text-gray-400">
-              {user?.email || ""}
-            </p>
 
-            <p className="text-xs text-cyan-400 capitalize">
-              {user?.role || ""}
+              {user?.role}
+
             </p>
 
           </div>

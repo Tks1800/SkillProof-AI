@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 
 from app.database import SessionLocal
 from app.models_new import Job
-from app.schemas import JobCreate
+from app.schemas.jobs import JobCreate
+from app.routers.auth import verify_token
 
 router = APIRouter(
     prefix="/jobs",
@@ -22,6 +23,7 @@ def get_db():
 @router.post("/")
 def create_job(
     job: JobCreate,
+    current_user=Depends(verify_token),
     db: Session = Depends(get_db)
 ):
     new_job = Job(
@@ -33,7 +35,7 @@ def create_job(
         job_type=job.job_type,
         description=job.description,
         required_skills=job.required_skills,
-        recruiter_email="demo@vaivoai.com"   # Temporary, we'll replace with JWT later
+        recruiter_email=current_user.email
     )
 
     db.add(new_job)

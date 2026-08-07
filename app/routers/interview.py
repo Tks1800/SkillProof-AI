@@ -2,12 +2,16 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.database import SessionLocal
-from app.models import InterviewInvitation
-from app.schemas import InterviewCreate
+from app.schemas.interview import InterviewCreate
+from app.services.interview_service import InterviewService
+from app.routers.auth import verify_token
+from app.models_new.user import User
 
 router = APIRouter(
+    prefix="/interviews",
     tags=["Interview"]
 )
+
 
 def get_db():
     db = SessionLocal()
@@ -17,95 +21,76 @@ def get_db():
         db.close()
 
 
-@router.post("/invite-interview")
-def invite_interview(
+# ==========================
+# Schedule Interview
+# ==========================
+
+@router.post("/send")
+def send_interview(
     interview: InterviewCreate,
     db: Session = Depends(get_db)
 ):
-    new_invitation = InterviewInvitation(
-        recruiter_email=interview.recruiter_email,
-        candidate_email=interview.candidate_email,
-        job_title=interview.job_title,
-        status="Pending"
+    return InterviewService.create_interview(
+        db,
+        interview
     )
 
-    db.add(new_invitation)
-    db.commit()
 
-    return {
-        "message": "Interview Invitation Sent Successfully"
-    }
+# ==========================
+# Candidate Interviews
+# ==========================
 
-
-
-@router.get("/candidate-interviews/{email}")
-def candidate_interviews(
-    email: str,
+@router.get("/candidate")
+def get_candidate_interviews(
+    current_user: User = Depends(verify_token),
     db: Session = Depends(get_db)
 ):
-    interviews = db.query(
-        InterviewInvitation
-    ).filter(
-        InterviewInvitation.candidate_email == email
-    ).all()
-
-    return [
-        {
-            "id": interview.id,
-            "recruiter_email": interview.recruiter_email,
-            "job_title": interview.job_title,
-            "status": interview.status
-        }
-        for interview in interviews
-    ]
+    return InterviewService.get_candidate_interviews(
+        db,
+        current_user.email
+    )
 
 
-@router.post("/accept-interview/{interview_id}")
+# ==========================
+# Recruiter Interviews
+# ==========================
+
+@router.get("/recruiter")
+def get_recruiter_interviews(
+    current_user: User = Depends(verify_token),
+    db: Session = Depends(get_db)
+):
+    return InterviewService.get_recruiter_interviews(
+        db,
+        current_user.email
+    )
+
+
+# ==========================
+# Accept Interview
+# ==========================
+
+@router.put("/{interview_id}/accept")
 def accept_interview(
     interview_id: int,
     db: Session = Depends(get_db)
 ):
-    interview = db.query(
-        InterviewInvitation
-    ).filter(
-        InterviewInvitation.id == interview_id
-    ).first()
-
-    if not interview:
-        return {
-            "message": "Interview not found"
-        }
-
-    interview.status = "Accepted"
-
-    db.commit()
-
-    return {
-        "message": "Interview Accepted"
-    }
+    return InterviewService.accept_interview(
+        db,
+        interview_id
+    )
 
 
+# ==========================
+# Reject Interview
+# ==========================
 
-@router.post("/reject-interview/{interview_id}")
+@router.put("/{interview_id}/reject")
 def reject_interview(
     interview_id: int,
     db: Session = Depends(get_db)
 ):
-    interview = db.query(
-        InterviewInvitation
-    ).filter(
-        InterviewInvitation.id == interview_id
-    ).first()
-
-    if not interview:
-        return {
-            "message": "Interview not found"
-        }
-
-    interview.status = "Rejected"
-
-    db.commit()
-
-    return {
-        "message": "Interview Rejected"
-    }
+    return InterviewService.reject_interview(
+        db,
+        interview_id
+    )

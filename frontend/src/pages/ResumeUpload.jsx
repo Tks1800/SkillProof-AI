@@ -1,5 +1,10 @@
+import DashboardLayout from "../layouts/DashboardLayout";
 import ResumeUpload from "../components/dashboard/ResumeUpload";
 
 export default function ResumeUploadPage() {
-  return <ResumeUpload />;
+  return (
+    <DashboardLayout>
+      <ResumeUpload />
+    </DashboardLayout>
+  );
 }

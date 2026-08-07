@@ -1,30 +1,10 @@
-from app.routers import auth
-from app.routers import candidate
-from app.routers import recruiter
-from app.routers import resume
-from app.routers import interview
-from app.routers import dashboard
-from jose import jwt
-from jose import JWTError
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from datetime import datetime, timedelta
-from app.auth import hash_password, verify_password
-from app.routers import resume
-from app.routers import jobs
-
-SECRET_KEY = "skillproof_super_secret_key"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-security = HTTPBearer()
-
-import PyPDF2
-from fastapi import FastAPI, Depends, UploadFile, File, HTTPException
-from sqlalchemy.orm import Session
-
-
-
-from app.database import Base, engine, SessionLocal
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from app.routers import skill_test
+from app.database import Base, engine
+from app.routers import verified_skills
+from app.routers import recruiter_dashboard
+from app.routers.notifications import router as notifications_router
 from app.models_new import (
     User,
     Resume,
@@ -38,18 +18,32 @@ from app.models_new import (
     InterviewInvitation,
     Application,
 )
-from app.schemas import (
-    UserCreate,
-    UserLogin,
-    TestSubmission,
-    JobCreate,
-    InterviewCreate,
+
+from app.routers import (
+    auth,
+    candidate,
+    recruiter,
+    resume,
+    interview,
+    dashboard,
+    jobs,
+    application,
+    candidate_profile,
+    ai_match,
 )
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+import os
+
+print("=" * 50)
+print("EMAIL:", os.getenv("EMAIL_ADDRESS"))
+print("PASSWORD LOADED:", bool(os.getenv("EMAIL_PASSWORD")))
+print("=" * 50)
+
 Base.metadata.create_all(bind=engine)
-
-from fastapi.middleware.cors import CORSMiddleware
-
-LAST_UPLOADED_FILE = None
 
 app = FastAPI(debug=True)
 
@@ -58,7 +52,13 @@ app.add_middleware(
     allow_origins=[
         "https://skill-proof-ai-ffy2.vercel.app",
         "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:5174",
+        "http://127.0.0.1:5174",
+        "http://localhost:5175",
+        "http://127.0.0.1:5175",
         "http://localhost:5176",
+        "http://127.0.0.1:5176",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -72,90 +72,15 @@ app.include_router(resume.router)
 app.include_router(interview.router)
 app.include_router(dashboard.router)
 app.include_router(jobs.router)
-
-TEST_QUESTIONS = {
-    "Python": [
-        {
-            "question": "Which keyword is used to define a function in Python?",
-            "options": ["func", "define", "def", "function"],
-            "answer": "def"
-        },
-        {
-            "question": "Which data type is mutable?",
-            "options": ["tuple", "list", "string", "int"],
-            "answer": "list"
-        }
-    ],
-
-    "SQL": [
-        {
-            "question": "Which SQL command retrieves data?",
-            "options": ["INSERT", "UPDATE", "SELECT", "DELETE"],
-            "answer": "SELECT"
-        }
-    ],
-
-    "FastAPI": [
-        {
-            "question": "Which decorator creates GET endpoints?",
-            "options": ["@app.post", "@app.get", "@app.put", "@app.delete"],
-            "answer": "@app.get"
-        }
-    ]
-}
-
-def create_access_token(data: dict):
-    to_encode = data.copy()
-
-    expire = datetime.utcnow() + timedelta(
-        minutes=ACCESS_TOKEN_EXPIRE_MINUTES
-    )
-
-    to_encode.update({"exp": expire})
-
-    encoded_jwt = jwt.encode(
-        to_encode,
-        SECRET_KEY,
-        algorithm=ALGORITHM
-    )
-
-    return encoded_jwt
-def verify_token(
-    credentials: HTTPAuthorizationCredentials = Depends(security)
-):
-    token = credentials.credentials
-
-    try:
-        payload = jwt.decode(
-          token,
-          SECRET_KEY,
-          algorithms=[ALGORITHM]
-        )
-
-        print("PAYLOAD:", payload)
-
-        email = payload.get("sub")
-
-        return email
-
-    except Exception as e:
-       print("JWT ERROR:", str(e))
-       raise HTTPException(
-        status_code=401,
-        detail="Invalid token"
-    )
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+app.include_router(application.router)
+app.include_router(candidate_profile.router)
+app.include_router(ai_match.router)
+app.include_router(skill_test.router)
+app.include_router(verified_skills.router)
+app.include_router(recruiter_dashboard.router)
+app.include_router(notifications_router)
 
 
 @app.get("/")
 def home():
     return {"message": "SkillProof AI Running"}
-
-
-    

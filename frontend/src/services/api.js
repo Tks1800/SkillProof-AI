@@ -7,7 +7,10 @@ const API = axios.create({
   },
 });
 
-// Attach JWT token automatically
+// ===========================
+// Attach JWT Token
+// ===========================
+
 API.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -23,9 +26,9 @@ API.interceptors.request.use(
 
 export default API;
 
-/* ===========================
-   Authentication
-=========================== */
+// ===========================
+// Authentication
+// ===========================
 
 export const loginUser = (data) =>
   API.post("/auth/login", data);
@@ -36,39 +39,38 @@ export const registerUser = (data) =>
 export const getProfile = () =>
   API.get("/auth/profile");
 
-/* ===========================
-   Recruiter
-=========================== */
+// ===========================
+// Recruiter Jobs
+// ===========================
 
 export const createJob = (data) =>
-  API.post("/create-job", data);
+  API.post("/jobs/", data);
 
 export const getRecruiterJobs = () =>
   API.get("/jobs");
 
-export const getApplications = () =>
-  API.get("/applications");
+export const getJob = (id) =>
+  API.get(`/jobs/${id}`);
 
-export const getMatchedCandidates = (jobId) =>
-  API.get(`/matched-candidates/${jobId}`);
+export const updateJob = (id, data) =>
+  API.put(`/jobs/${id}`, data);
 
-export const acceptApplication = (id) =>
-  API.put(`/application/${id}/accept`);
+export const deleteJob = (id) =>
+  API.delete(`/jobs/${id}`);
 
-export const rejectApplication = (id) =>
-  API.put(`/application/${id}/reject`);
-
-/* ===========================
-   Candidate
-=========================== */
+// ===========================
+// Candidate Jobs
+// ===========================
 
 export const getAvailableJobs = () =>
   API.get("/jobs");
 
 export const applyJob = (jobId) =>
-  API.post("/apply-job", {
-    job_id: jobId,
-  });
+  API.post(`/applications/apply/${jobId}`);
+
+// ===========================
+// Resume
+// ===========================
 
 export const uploadResume = (formData) =>
   API.post("/upload-resume", formData, {
@@ -77,15 +79,98 @@ export const uploadResume = (formData) =>
     },
   });
 
+// ===========================
+// Skill Test
+// ===========================
+
 export const getSkillTest = (skill) =>
   API.get(`/test/${skill}`);
 
+
+
+// ===========================
+// Recruiter Applications
+// ===========================
+
+export const getRecruiterApplications = () =>
+  API.get("/applications/recruiter");
+
+export const acceptApplication = (id) =>
+  API.put(`/applications/${id}/accept`);
+
+export const rejectApplication = (id) =>
+  API.put(`/applications/${id}/reject`);
+
+export const getJobApplicants = (jobId) =>
+  API.get(`/recruiter-dashboard/applicants/${jobId}`);
+
+// ===========================
+// Interviews
+// ===========================
+
+export const sendInterview = (data) =>
+  API.post("/interviews/send", data);
+
+export const getCandidateInterviews = () =>
+  API.get("/interviews/candidate");
+
+export const getRecruiterInterviews = () =>
+  API.get("/interviews/recruiter");
+
+export const acceptInterview = (id) =>
+  API.put(`/interviews/${id}/accept`);
+
+export const rejectInterview = (id) =>
+  API.put(`/interviews/${id}/reject`);
+
+// ===========================
+// Dashboard
+// ===========================
+
+export const getRecruiterDashboard = () =>
+  API.get("/dashboard/recruiter");
+
+export const getCandidateDashboard = () =>
+  API.get("/dashboard/stats");
+
+// ===========================
+// AI Matching
+// ===========================
+
+export const getMatchedCandidates = (jobId) =>
+  API.get(`/matched-candidates/${jobId}`);
+
+export const getAiMatch = (jobId, email) =>
+  API.get(`/ai-match/${jobId}/${encodeURIComponent(email)}`);
+
+export const getDetectedSkills = () =>
+  API.get("/skill-test/skills");
+
+export const getSkillQuestions = (skill) =>
+  API.get(`/skill-test/${skill}`);
+
 export const submitSkillTest = (data) =>
-  API.post("/submit-test", data);
+  API.post("/skill-test/submit", data);
 
-/* ===========================
-   Interview
-=========================== */
+export const getRecruiterStats = () =>
+  API.get("/recruiter-dashboard/stats");
 
-export const sendInterviewInvitation = (data) =>
-  API.post("/invite-interview", data);
+export const getCandidateAnalysis = (email, jobId) =>
+  API.get(
+    `/candidate-profile/${email}/analysis?jobId=${jobId}`
+  );
+
+
+export const getNotifications = () =>
+  API.get("/notifications");
+
+export const markNotificationRead = (id) =>
+  API.put(`/notifications/read/${id}`);
+
+export const markAllNotificationsRead = () =>
+  API.put("/notifications/read-all");
+
+export const viewResume = (resumeId) =>
+  API.get(`/resume/view/${resumeId}`, {
+    responseType: "blob",
+  });

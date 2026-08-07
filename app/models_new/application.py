@@ -8,12 +8,22 @@ class Application(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    job_id = Column(Integer)
+    job_id = Column(Integer, nullable=False)
 
-    candidate_email = Column(String)
+    candidate_email = Column(String, nullable=False, index=True)
 
-    recruiter_email = Column(String)
+    recruiter_email = Column(String, nullable=False, index=True)
 
-    status = Column(String, default="Pending")
+    resume_id = Column(Integer)
+
+    status = Column(String, default="Applied")
+
+    match_score = Column(Integer, default=0)
+
+    recommendation = Column(String)
+
+    matched_skills = Column(String)
+
+    missing_skills = Column(String)
 
     created_at = Column(DateTime, default=datetime.utcnow)

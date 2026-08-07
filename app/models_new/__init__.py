@@ -9,3 +9,5 @@ from .candidate_profile import CandidateProfile
 from .candidate_skill import CandidateSkill
 from .application import Application
 from .interview import InterviewInvitation
+from .verified_skill import VerifiedSkill
+from .notification import Notification

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 import CandidateSidebar from "../components/dashboard/CandidateSidebar";
 import RecruiterSidebar from "../components/dashboard/RecruiterSidebar";
-
 import Navbar from "../components/dashboard/Navbar";
 
 export default function DashboardLayout({ children }) {

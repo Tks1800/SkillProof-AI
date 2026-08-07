@@ -38,11 +38,11 @@ export default function ResumeUpload() {
 
       setResume(resumeData.data);
 
-      alert("Resume Uploaded Successfully!");
+      setResume(resumeData.data);
 
       // Redirect after 2 seconds
       setTimeout(() => {
-        navigate("/candidate-dashboard");
+        navigate("/candidate/dashboard");
       }, 2000);
     } catch (err) {
       console.error(err);

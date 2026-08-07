@@ -1,84 +1,89 @@
+import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
   Briefcase,
+  CalendarDays,
   FileText,
-  Brain,
   User,
-  Settings,
   LogOut,
 } from "lucide-react";
-import { NavLink } from "react-router-dom";
-
-const menu = [
-  {
-    name: "Dashboard",
-    icon: <LayoutDashboard size={20} />,
-    path: "/candidate-dashboard",
-  },
-  {
-    name: "Jobs",
-    icon: <Briefcase size={20} />,
-    path: "/candidate/jobs",
-  },
-  {
-    name: "Resume",
-    icon: <FileText size={20} />,
-    path: "/resume-upload",
-  },
-  {
-    name: "Skill Test",
-    icon: <Brain size={20} />,
-    path: "/skill-test",
-  },
-  {
-    name: "Profile",
-    icon: <User size={20} />,
-    path: "/profile",
-  },
-  {
-    name: "Settings",
-    icon: <Settings size={20} />,
-    path: "/settings",
-  },
-];
 
 export default function CandidateSidebar() {
+  const menuItems = [
+    {
+      title: "Dashboard",
+      icon: <LayoutDashboard size={20} />,
+      path: "/candidate/dashboard",
+    },
+    {
+      title: "Available Jobs",
+      icon: <Briefcase size={20} />,
+      path: "/candidate/jobs",
+    },
+    {
+      title: "My Interviews",
+      icon: <CalendarDays size={20} />,
+      path: "/candidate/interviews",
+    },
+    {
+      title: "Resume",
+      icon: <FileText size={20} />,
+      path: "/candidate/resume",
+    },
+    {
+      title: "Profile",
+      icon: <User size={20} />,
+      path: "/candidate/profile",
+    },
+  ];
+
+  const logout = () => {
+    localStorage.clear();
+    window.location.href = "/login";
+  };
+
   return (
-    <aside className="w-72 bg-[#111827] border-r border-gray-800 flex flex-col">
-      {/* Logo */}
-      <div className="h-20 flex items-center justify-center border-b border-gray-800">
-        <h1 className="text-2xl font-bold text-cyan-400">
+    <aside className="w-72 bg-[#0F172A] border-r border-gray-800 flex flex-col">
+
+      <div className="p-6 border-b border-gray-800">
+        <h1 className="text-2xl font-bold text-blue-400">
           SkillProof AI
         </h1>
+
+        <p className="text-gray-400 text-sm mt-1">
+          Candidate Portal
+        </p>
       </div>
 
-      {/* Menu */}
-      <nav className="flex-1 px-4 py-6 space-y-2">
-        {menu.map((item) => (
+      <nav className="flex-1 p-4 space-y-2">
+        {menuItems.map((item) => (
           <NavLink
-            key={item.name}
+            key={item.path}
             to={item.path}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+              `flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                 isActive
-                  ? "bg-cyan-500 text-black font-semibold"
-                  : "text-gray-300 hover:bg-[#1F2937]"
+                  ? "bg-blue-600 text-white"
+                  : "text-gray-300 hover:bg-slate-800"
               }`
             }
           >
             {item.icon}
-            <span>{item.name}</span>
+            {item.title}
           </NavLink>
         ))}
       </nav>
 
-      {/* Logout */}
-      <div className="border-t border-gray-800 p-4">
-        <button className="flex items-center gap-3 w-full px-4 py-3 rounded-xl hover:bg-red-500 hover:text-white transition-all">
+      <div className="p-4 border-t border-gray-800">
+        <button
+          onClick={logout}
+          className="flex items-center gap-3 w-full px-4 py-3 rounded-lg bg-red-600 hover:bg-red-700 transition"
+        >
           <LogOut size={20} />
           Logout
         </button>
       </div>
+
     </aside>
   );
 }

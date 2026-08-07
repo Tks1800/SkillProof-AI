@@ -1,6 +1,7 @@
 import DashboardCards from "./DashboardCards";
 import QuickActions from "./QuickActions";
 import RecentJobs from "./RecentJobs";
+import InterviewScheduleModal from "../interviews/InterviewScheduleModal";
 
 export default function RecruiterDashboard() {
   return (

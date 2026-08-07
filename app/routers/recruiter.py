@@ -54,7 +54,7 @@ def create_job(
     }
 
 
-@router.get("/jobs")
+@router.get("/recruiter/jobs")
 def get_jobs(
     db: Session = Depends(get_db),
     current_user: User = Depends(verify_token)

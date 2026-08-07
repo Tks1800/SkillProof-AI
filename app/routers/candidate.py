@@ -6,7 +6,7 @@ from app.models_new import User, CandidateSkill, TestResult
 from app.routers.auth import verify_token
 from app.schemas import TestSubmission
 from app.models_new import Application
-from app.schemas import ApplyJob
+from app.schemas.resume import TestSubmission
 from app.models_new import (
     User,
     CandidateSkill,
@@ -172,30 +172,6 @@ def submit_test(
         "message": "Test Submitted Successfully"
     }
 
-@router.post("/apply-job")
-def apply_job(
-    data: ApplyJob,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(verify_token)
-):
-
-    job = db.query(Job).filter(Job.id == data.job_id).first()
-
-    if not job:
-        return {"message": "Job not found"}
-
-    application = Application(
-        job_id=job.id,
-        candidate_email=current_user.email,
-        recruiter_email=job.recruiter_email,
-    )
-
-    db.add(application)
-    db.commit()
-
-    return {
-        "message": "Application Submitted Successfully"
-    }
 
 @router.get("/available-jobs")
 def available_jobs(
